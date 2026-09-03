@@ -9,8 +9,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
-    "better-sqlite3": "^13.0.3"
+    "active-win": "^8.2.1",
+    "better-sqlite3": "^13.0.3",
+    "dbus-next": "^0.10.2"
+  },
+  "allowScripts": {
+    "active-win@8.2.1": true,
+    "better-sqlite3@13.0.3": true
   }
 }
