@@ -1,37 +1,19 @@
+import 'dotenv/config';
 import { getFocusedWindow } from './src/window-detector/index.js';
+import { bufferEvent } from './src/local-buffer.js';
+import { syncPendingEvents } from './src/sync-client.js';
 
-const TEST_DEVICE_ID = '11111111-1111-1111-1111-111111111111';
-const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 5000; // FR-2 default
+const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 5000;
+const SYNC_INTERVAL_MS = Number(process.env.SYNC_INTERVAL_MS) || 60000;
 
-let currentEvent = null; // { app_name, window_title, start_time }
-
-async function sendEvent(event, endTime) {
-  const payload = {
-    device_id: TEST_DEVICE_ID,
-    app_name: event.app_name,
-    window_title: event.window_title,
-    start_time: event.start_time,
-    end_time: endTime
-  };
-
-  try {
-    const res = await fetch('http://localhost:3000/api/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.log('Synced:', res.status, event.app_name);
-  } catch (err) {
-    console.error('Failed to sync event (will be handled by buffer in Slice 6):', err.message);
-  }
-}
+let currentEvent = null;
 
 async function poll() {
   let focused;
   try {
     focused = await getFocusedWindow();
   } catch (err) {
-    console.error('[health-monitor]', err.message); // FR-6b
+    console.error('[health-monitor]', err.message);
     return;
   }
 
@@ -42,13 +24,14 @@ async function poll() {
     return;
   }
 
-  const changed = currentEvent.app_name !== focused.app_name;
-
-  if (changed) {
-    await sendEvent(currentEvent, now);
+  if (currentEvent.app_name !== focused.app_name) {
+    bufferEvent({ ...currentEvent, end_time: now });
     currentEvent = { ...focused, start_time: now };
   }
 }
 
-console.log(`Polling every ${POLL_INTERVAL_MS}ms`);
+console.log(`Polling every ${POLL_INTERVAL_MS}ms, syncing every ${SYNC_INTERVAL_MS}ms`);
 setInterval(poll, POLL_INTERVAL_MS);
+setInterval(syncPendingEvents, SYNC_INTERVAL_MS);
+
+syncPendingEvents();
