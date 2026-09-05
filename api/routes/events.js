@@ -1,16 +1,15 @@
 import express from 'express';
 import pool from '../config/db.js';
+import { deviceAuth } from '../middleware/auth.js';
+import { validateEvent } from '../middleware/validation.js';
 
+const eventsRouter = express.Router();
 
-export const eventsRouter = express.Router();
-
-
-eventsRouter.post('/', async (req, res) => {
-  const { device_id, app_name, window_title, start_time, end_time } = req.body;
+eventsRouter.post('/', deviceAuth, validateEvent, async (req, res) => {
+  const { app_name, window_title, start_time, end_time } = req.body;
+  const deviceId = req.device.id;
 
   try {
-    // apps.name is UNIQUE (DBDD 4.2) — get existing id or create it.
-    // category stays NULL until the AI categorizer job runs (FR-15).
     const appResult = await pool.query(
       `INSERT INTO apps (name) VALUES ($1)
        ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
@@ -19,12 +18,11 @@ eventsRouter.post('/', async (req, res) => {
     );
     const appId = appResult.rows[0].id;
 
-    // duration_seconds is GENERATED ALWAYS — never insert it directly (DBDD 4.3)
     const eventResult = await pool.query(
       `INSERT INTO raw_events (device_id, app_id, window_title, start_time, end_time)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [device_id, appId, window_title, start_time, end_time]
+      [deviceId, appId, window_title, start_time, end_time]
     );
 
     res.status(201).json(eventResult.rows[0]);
@@ -34,3 +32,4 @@ eventsRouter.post('/', async (req, res) => {
   }
 });
 
+export default eventsRouter;
