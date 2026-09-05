@@ -13,7 +13,8 @@
   "dependencies": {
     "active-win": "^8.2.1",
     "better-sqlite3": "^13.0.3",
-    "dbus-next": "^0.10.2"
+    "dbus-next": "^0.10.2",
+    "dotenv": "^17.4.2"
   },
   "allowScripts": {
     "active-win@8.2.1": true,
