@@ -25,7 +25,11 @@ async function poll() {
   }
 
   if (currentEvent.app_name !== focused.app_name) {
-    bufferEvent({ ...currentEvent, end_time: now });
+   bufferEvent({
+  ...currentEvent,
+  window_title: CAPTURE_TITLES ? currentEvent.window_title : null,
+  end_time: now
+});
     currentEvent = { ...focused, start_time: now };
   }
 }
