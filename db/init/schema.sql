@@ -4,6 +4,7 @@ CREATE TABLE devices (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     label           TEXT NOT NULL,
     api_key_hash    TEXT NOT NULL UNIQUE,
+    capture_titles  BOOLEAN NOT NULL DEFAULT true,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_seen_at    TIMESTAMPTZ
 );
