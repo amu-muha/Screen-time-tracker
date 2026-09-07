@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useDeviceId } from './hooks/useDeviceId';
+import DeviceSetupPage from './pages/DeviceSetupPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
+import SettingsPage from './pages/SettingsPage';
 
 export default function App() {
-  const [events, setEvents] = useState([]);
+  const { deviceId, setDeviceId } = useDeviceId();
+  const [screen, setScreen] = useState('dashboard'); // 'dashboard' | 'settings'
 
-  useEffect(() => {
-    fetch('http://localhost:3000/api/usage')
-      .then(res => res.json())
-      .then(setEvents)
-      .catch(console.error);
-  }, []);
+  if (!deviceId) {
+    return <DeviceSetupPage onRegistered={setDeviceId} />;
+  }
 
-  return (
-    <div>
-      <h1>Usage</h1>
-      {events.map(e => (
-        <p key={e.id}>{e.app_name} — {e.duration_seconds}s</p>
-      ))}
-    </div>
-  );
+  if (screen === 'settings') {
+    return <SettingsPage deviceId={deviceId} onBack={() => setScreen('dashboard')} />;
+  }
+
+  return <DashboardPage deviceId={deviceId} onOpenSettings={() => setScreen('settings')} />;
 }
