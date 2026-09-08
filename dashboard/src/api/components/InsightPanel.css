@@ -1,0 +1,28 @@
+.insight-panel {
+  background: linear-gradient(135deg, #F2F0FF 0%, #FBEFF7 100%);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  height: 100%;
+}
+
+.insight-panel__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.insight-panel__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.insight-panel__pending {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  font-style: italic;
+}

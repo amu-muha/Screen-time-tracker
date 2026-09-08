@@ -1,0 +1,39 @@
+.breakdown__heading {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+
+.breakdown__empty {
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.breakdown__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.breakdown__row-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.breakdown__app-name { font-weight: 600; }
+.breakdown__duration { color: var(--ink-soft); font-weight: 600; }
+
+.breakdown__track {
+  height: 9px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.breakdown__fill {
+  height: 100%;
+  border-radius: 999px;
+}
