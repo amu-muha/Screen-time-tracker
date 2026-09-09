@@ -112,4 +112,20 @@ Copy the returned `api_key` into `agent/.env`.
 ## Status
 🚧 In active development, following the documented pipeline in `/docs`. See open issues for current progress against the SRS requirements.
 
+## Progress
+
+Built as a sequence of vertical slices, each one proven end-to-end before widening scope.
+
+- [x] Slice 1–4: Agent → API → Database → Dashboard, hardcoded event
+- [x] Slice 5: Real window detection (X11/Windows/macOS via `active-win`, Wayland via D-Bus)
+- [x] Slice 6: Local SQLite buffer, retry/backoff, device auth, request validation
+- [x] Slice 7: Daily/weekly/monthly rollups, AI categorization and summarization (Gemini)
+- [x] Slice 8: Full dashboard UI — range tabs, summary cards, usage breakdown, AI insight panel, device setup, settings
+
+**Known gaps:**
+- NFR-4 (HTTPS) — not yet implemented, local HTTP only in dev
+- NFR-9 (90-day raw event retention job) — not yet implemented
+- Yearly AI summaries — daily/weekly/monthly only so far
+- DBDD doesn't yet document the `period_end` computation rule used in the summarizer job
+
 ## License
