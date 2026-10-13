@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { fetchUsage, fetchInsights } from '../api/client';
-import DashboardHeader from '../api/components/DashboardHeader';
-import SummaryCards from '../api/components/SummaryCards';
-import UsageBreakdown from '../api/components/UsageBreakdown';
-import InsightPanel from '../api/components/InsightPanel';
+import DashboardHeader from '../components/DashboardHeader';
+import SummaryCards from '../components/SummaryCards';
+import UsageBreakdown from '../components/UsageBreakdown';
+import InsightPanel from '../components/InsightPanel';
 
 export default function DashboardPage({ deviceId, onOpenSettings }) {
   const [range, setRange] = useState('daily');

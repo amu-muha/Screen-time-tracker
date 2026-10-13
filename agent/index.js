@@ -5,6 +5,7 @@ import { syncPendingEvents } from './src/sync-client.js';
 
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 5000;
 const SYNC_INTERVAL_MS = Number(process.env.SYNC_INTERVAL_MS) || 60000;
+const CAPTURE_TITLES = process.env.CAPTURE_WINDOW_TITLES !== 'false';
 
 let currentEvent = null;
 
