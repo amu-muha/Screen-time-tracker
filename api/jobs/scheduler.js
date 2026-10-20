@@ -32,3 +32,6 @@ cron.schedule('0 1 * * *', async () => {
 });
 
 console.log('[scheduler] jobs scheduled');
+
+// Run initial rollup on boot to ensure aggregates are immediately fresh
+runAllRollups().catch(err => console.error('[scheduler] startup rollup error:', err.message));

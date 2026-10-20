@@ -23,5 +23,11 @@ export default function App() {
     );
   }
 
-  return <DashboardPage deviceId={deviceId} onOpenSettings={() => setScreen('settings')} />;
+  return (
+    <DashboardPage
+      deviceId={deviceId}
+      onSelectDevice={setDeviceId}
+      onOpenSettings={() => setScreen('settings')}
+    />
+  );
 }

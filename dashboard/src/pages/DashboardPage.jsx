@@ -5,7 +5,7 @@ import SummaryCards from '../components/SummaryCards';
 import UsageBreakdown from '../components/UsageBreakdown';
 import InsightPanel from '../components/InsightPanel';
 
-export default function DashboardPage({ deviceId, onOpenSettings }) {
+export default function DashboardPage({ deviceId, onSelectDevice, onOpenSettings }) {
   const [range, setRange] = useState('daily');
   const [usage, setUsage] = useState([]);
   const [insight, setInsight] = useState(null);
@@ -14,24 +14,38 @@ export default function DashboardPage({ deviceId, onOpenSettings }) {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
 
-    Promise.all([fetchUsage(range, deviceId), fetchInsights(range, deviceId)])
-      .then(([usageData, insightData]) => {
-        if (cancelled) return;
-        setUsage(usageData);
-        setInsight(insightData);
-      })
-      .catch(err => { if (!cancelled) setError(err.message); })
-      .finally(() => { if (!cancelled) setLoading(false); });
+    function loadData(isInitial = false) {
+      if (isInitial) setLoading(true);
+      Promise.all([fetchUsage(range, deviceId), fetchInsights(range, deviceId)])
+        .then(([usageData, insightData]) => {
+          if (cancelled) return;
+          setUsage(usageData);
+          setInsight(insightData);
+          setError(null);
+        })
+        .catch(err => { if (!cancelled) setError(err.message); })
+        .finally(() => { if (!cancelled && isInitial) setLoading(false); });
+    }
 
-    return () => { cancelled = true; };
+    loadData(true);
+    const interval = setInterval(() => loadData(false), 5000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [range, deviceId]);
 
   return (
     <div className="card">
-      <DashboardHeader range={range} onRangeChange={setRange} onOpenSettings={onOpenSettings} />
+      <DashboardHeader
+        range={range}
+        onRangeChange={setRange}
+        deviceId={deviceId}
+        onSelectDevice={onSelectDevice}
+        onOpenSettings={onOpenSettings}
+      />
 
       {error ? (
         <p style={{ color: 'var(--ink-soft)', fontSize: 14 }}>
