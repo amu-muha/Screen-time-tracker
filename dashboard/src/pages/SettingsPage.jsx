@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { fetchDevice, updateDevice } from '../api/client';
+import { fetchDevice, fetchDevices, updateDevice } from '../api/client';
 
-export default function SettingsPage({ deviceId, onBack }) {
+export default function SettingsPage({ deviceId, onSelectDevice, onRegisterNew, onBack }) {
   const [device, setDevice] = useState(null);
+  const [allDevices, setAllDevices] = useState([]);
   const [label, setLabel] = useState('');
   const [captureTitles, setCaptureTitles] = useState(true);
   const [saved, setSaved] = useState(false);
@@ -14,6 +15,7 @@ export default function SettingsPage({ deviceId, onBack }) {
       setLabel(d.label);
       setCaptureTitles(d.capture_titles);
     });
+    fetchDevices().then(list => setAllDevices(list)).catch(() => {});
   }, [deviceId]);
 
   async function handleSave() {
@@ -36,6 +38,29 @@ export default function SettingsPage({ deviceId, onBack }) {
           Back
         </button>
       </div>
+
+      {allDevices.length > 1 && (
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>
+            Active device
+          </label>
+          <select
+            value={deviceId}
+            onChange={e => onSelectDevice && onSelectDevice(e.target.value)}
+            style={{
+              display: 'block', width: '100%', marginTop: 6,
+              padding: '10px 12px', borderRadius: 10, border: '1px solid var(--border)',
+              fontSize: 14, fontFamily: 'inherit', background: '#fff'
+            }}
+          >
+            {allDevices.map(d => (
+              <option key={d.id} value={d.id}>
+                {d.label} ({d.id.slice(0, 8)}...)
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>Device label</label>
       <input
@@ -85,16 +110,31 @@ export default function SettingsPage({ deviceId, onBack }) {
         </p>
       )}
 
-      <button
-        onClick={handleSave}
-        style={{
-          background: saved ? 'var(--cat-productivity)' : 'var(--ink)', color: '#fff',
-          border: 'none', padding: '10px 18px', borderRadius: 10,
-          fontWeight: 600, fontSize: 14, cursor: 'pointer', marginTop: 12
-        }}
-      >
-        {saved ? 'Saved' : 'Save changes'}
-      </button>
+      <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+        <button
+          onClick={handleSave}
+          style={{
+            background: saved ? 'var(--cat-productivity)' : 'var(--ink)', color: '#fff',
+            border: 'none', padding: '10px 18px', borderRadius: 10,
+            fontWeight: 600, fontSize: 14, cursor: 'pointer'
+          }}
+        >
+          {saved ? 'Saved' : 'Save changes'}
+        </button>
+
+        {onRegisterNew && (
+          <button
+            onClick={onRegisterNew}
+            style={{
+              background: 'transparent', color: 'var(--ink-soft)',
+              border: '1px solid var(--border)', padding: '10px 14px', borderRadius: 10,
+              fontWeight: 600, fontSize: 13, cursor: 'pointer'
+            }}
+          >
+            + Register new device
+          </button>
+        )}
+      </div>
     </div>
   );
 }

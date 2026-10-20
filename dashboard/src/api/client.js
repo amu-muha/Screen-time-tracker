@@ -23,6 +23,12 @@ export async function registerDevice(label) {
   return res.json(); // { device, api_key }
 }
 
+export async function fetchDevices() {
+  const res = await fetch(`${API_BASE}/devices`);
+  if (!res.ok) throw new Error('devices fetch failed');
+  return res.json();
+}
+
 export async function fetchDevice(deviceId) {
   const res = await fetch(`${API_BASE}/devices/${deviceId}`);
   if (!res.ok) throw new Error('device fetch failed');

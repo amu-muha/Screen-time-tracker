@@ -13,7 +13,14 @@ export default function App() {
   }
 
   if (screen === 'settings') {
-    return <SettingsPage deviceId={deviceId} onBack={() => setScreen('dashboard')} />;
+    return (
+      <SettingsPage
+        deviceId={deviceId}
+        onSelectDevice={setDeviceId}
+        onRegisterNew={() => { setDeviceId(null); setScreen('dashboard'); }}
+        onBack={() => setScreen('dashboard')}
+      />
+    );
   }
 
   return <DashboardPage deviceId={deviceId} onOpenSettings={() => setScreen('settings')} />;

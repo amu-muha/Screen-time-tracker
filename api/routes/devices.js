@@ -13,6 +13,18 @@ devicesRouter.get('/me', deviceAuth, async (req, res) => {
   });
 });
 
+devicesRouter.get('/', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, label, capture_titles, created_at, last_seen_at FROM devices ORDER BY created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'failed to list devices' });
+  }
+});
+
 devicesRouter.post("/", async(req, res)=>{
     const {label} = req.body
 
