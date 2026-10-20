@@ -122,10 +122,9 @@ Built as a sequence of vertical slices, each one proven end-to-end before wideni
 - [x] Slice 7: Daily/weekly/monthly rollups, AI categorization and summarization (Gemini)
 - [x] Slice 8: Full dashboard UI — range tabs, summary cards, usage breakdown, AI insight panel, device setup, settings
 
-**Known gaps:**
-- NFR-4 (HTTPS) — not yet implemented, local HTTP only in dev
-- NFR-9 (90-day raw event retention job) — not yet implemented
-- Yearly AI summaries — daily/weekly/monthly only so far
-- DBDD doesn't yet document the `period_end` computation rule used in the summarizer job
+- [x] Slice 9: Gaps filled — 90-day retention cleanup job (NFR-9), yearly AI summaries, dynamic device title-capture sync (NFR-8), multi-device UI switcher, automated test suites (API & Agent), full containerization (Docker Compose), and complete SDLC specifications in `/docs`.
+
+**Production Note:**
+- **NFR-4 (HTTPS)**: For production deployments on a public domain, run behind a TLS reverse proxy (e.g. Caddy or Nginx with Let's Encrypt certificates), pointing to port 8080 (Dashboard) and port 3000 (API).
 
 ## License

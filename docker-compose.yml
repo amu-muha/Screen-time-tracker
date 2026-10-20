@@ -11,7 +11,34 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: screen_time_api
+    depends_on:
+      - postgres
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/appdb
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: screen_time_dashboard
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    restart: unless-stopped
 
 volumes:
   pgdata:
-  
