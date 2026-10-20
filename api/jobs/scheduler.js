@@ -16,12 +16,13 @@ cron.schedule('0 */6 * * *', async () => {
   await runCategorizer();
 });
 
-// Summarizer once daily, just after midnight — daily/weekly/monthly period boundaries
+// Summarizer once daily, just after midnight — daily/weekly/monthly/yearly period boundaries
 cron.schedule('5 0 * * *', async () => {
   console.log('[scheduler] running summarizer...');
   await runSummarizer('daily');
   await runSummarizer('weekly');
   await runSummarizer('monthly');
+  await runSummarizer('yearly');
 });
 
 // Retention cleanup once daily at 01:00 — purges raw events older than 90 days (NFR-9)

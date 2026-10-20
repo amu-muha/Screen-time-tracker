@@ -34,10 +34,10 @@ Mention their most-used app/category and any notable trend. Keep it plain and fa
 }
 
 const RANGE_CONFIG = {
-  daily: { table: 'daily_usage', dateCol: 'usage_date' },
-  weekly: { table: 'weekly_usage', dateCol: 'week_start' },
-  monthly: { table: 'monthly_usage', dateCol: 'month_start' }
-  // yearly summaries are less commonly needed; add later if wanted
+  daily: { table: 'daily_usage', dateCol: 'usage_date', selectStart: 't.usage_date' },
+  weekly: { table: 'weekly_usage', dateCol: 'week_start', selectStart: 't.week_start' },
+  monthly: { table: 'monthly_usage', dateCol: 'month_start', selectStart: 't.month_start' },
+  yearly: { table: 'yearly_usage', dateCol: 'usage_year', selectStart: 'MAKE_DATE(t.usage_year, 1, 1)' }
 };
 
 export async function runSummarizer(rangeType) {
@@ -50,7 +50,7 @@ export async function runSummarizer(rangeType) {
 
   for (const device of devicesResult.rows) {
     const usageResult = await pool.query(
-      `SELECT a.name AS app_name, a.category, t.total_seconds, t.${config.dateCol} AS period_start
+      `SELECT a.name AS app_name, a.category, t.total_seconds, ${config.selectStart} AS period_start
        FROM ${config.table} t
        JOIN apps a ON a.id = t.app_id
        WHERE t.device_id = $1
@@ -61,8 +61,9 @@ export async function runSummarizer(rangeType) {
     if (usageResult.rows.length === 0) continue;
 
     const periodStart = usageResult.rows[0].period_start;
+    const periodStartTime = periodStart instanceof Date ? periodStart.getTime() : new Date(periodStart).getTime();
     const periodRows = usageResult.rows.filter(
-      r => r.period_start.getTime() === periodStart.getTime()
+      r => (r.period_start instanceof Date ? r.period_start.getTime() : new Date(r.period_start).getTime()) === periodStartTime
     );
 
     const existing = await pool.query(
@@ -70,11 +71,11 @@ export async function runSummarizer(rangeType) {
       [device.id, rangeType, periodStart]
     );
     if (existing.rows.length > 0) {
-      console.log(`[summarizer] insight already exists for device ${device.id} (${rangeType}, ${periodStart.toISOString().slice(0,10)}) — skipping`);
+      console.log(`[summarizer] insight already exists for device ${device.id} (${rangeType}, ${new Date(periodStart).toISOString().slice(0,10)}) — skipping`);
       continue;
     }
 
-        try {
+    try {
       const summaryText = await generateSummary(periodRows, rangeType);
       if (!summaryText) continue;
 
@@ -85,6 +86,8 @@ export async function runSummarizer(rangeType) {
         periodEndExpr = "($3::date + INTERVAL '6 days')::date";
       } else if (rangeType === 'monthly') {
         periodEndExpr = "(($3::date + INTERVAL '1 month') - INTERVAL '1 day')::date";
+      } else if (rangeType === 'yearly') {
+        periodEndExpr = "(($3::date + INTERVAL '1 year') - INTERVAL '1 day')::date";
       }
 
       await pool.query(
