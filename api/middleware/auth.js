@@ -9,14 +9,14 @@ export async function deviceAuth(req,res,next){
     const apiKeyHash = crypto.createHash('sha256').update(apiKey).digest('hex')
     try {
         const result = await pool.query(
-            'SELECT id,label FROM devices WHERE api_key_hash = $1',
+            'SELECT id, label, capture_titles FROM devices WHERE api_key_hash = $1',
            [apiKeyHash] 
         )
 
         if(result.rows.length === 0){
             return res.status(401).json({error: 'invalid API key'})
         }
-        req.device = result.rows[0]; // { id, label } — available to downstream routes
+        req.device = result.rows[0]; // { id, label, capture_titles }
     await pool.query(`UPDATE devices SET last_seen_at = now() WHERE id = $1`, [req.device.id]);
     next();
     }

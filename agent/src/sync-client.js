@@ -4,6 +4,31 @@ import { getUnsyncedEvents, markSynced } from './local-buffer.js';
 const API_URL = process.env.API_URL;
 const API_KEY = process.env.API_KEY;
 
+export const runtimeConfig = {
+  captureTitles: process.env.CAPTURE_WINDOW_TITLES !== 'false'
+};
+
+export async function refreshDeviceConfig() {
+  if (!API_KEY || !API_URL) return;
+  try {
+    const configUrl = API_URL.replace(/\/events\/?$/, '/devices/me');
+    const res = await fetch(configUrl, {
+      headers: { 'X-API-Key': API_KEY }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof data.capture_titles === 'boolean') {
+        if (runtimeConfig.captureTitles !== data.capture_titles) {
+          console.log(`[config] updated capture_titles from server: ${data.capture_titles}`);
+          runtimeConfig.captureTitles = data.capture_titles;
+        }
+      }
+    }
+  } catch (err) {
+    // Keep existing fallback if network fails
+  }
+}
+
 async function sendOne(event) {
   const res = await fetch(API_URL, {
     method: 'POST',
@@ -19,13 +44,18 @@ async function sendOne(event) {
     })
   });
 
+  const body = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
     throw new Error(`API rejected event: ${res.status} ${JSON.stringify(body)}`);
+  }
+  if (typeof body.capture_titles === 'boolean' && runtimeConfig.captureTitles !== body.capture_titles) {
+    console.log(`[config] updated capture_titles from server: ${body.capture_titles}`);
+    runtimeConfig.captureTitles = body.capture_titles;
   }
 }
 
 export async function syncPendingEvents() {
+  await refreshDeviceConfig();
   const pending = getUnsyncedEvents();
   if (pending.length === 0) return;
 

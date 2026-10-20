@@ -25,7 +25,10 @@ eventsRouter.post('/', deviceAuth, validateEvent, async (req, res) => {
       [deviceId, appId, window_title, start_time, end_time]
     );
 
-    res.status(201).json(eventResult.rows[0]);
+    res.status(201).json({
+      ...eventResult.rows[0],
+      capture_titles: req.device.capture_titles
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'insert failed' });

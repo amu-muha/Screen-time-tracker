@@ -1,8 +1,17 @@
 import express from "express"
 import crypto from "crypto"
 import pool from "../config/db.js"
+import { deviceAuth } from "../middleware/auth.js"
 
 const devicesRouter = express.Router()
+
+devicesRouter.get('/me', deviceAuth, async (req, res) => {
+  res.json({
+    id: req.device.id,
+    label: req.device.label,
+    capture_titles: req.device.capture_titles
+  });
+});
 
 devicesRouter.post("/", async(req, res)=>{
     const {label} = req.body

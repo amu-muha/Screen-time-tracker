@@ -1,11 +1,10 @@
 import 'dotenv/config';
 import { getFocusedWindow } from './src/window-detector/index.js';
 import { bufferEvent } from './src/local-buffer.js';
-import { syncPendingEvents } from './src/sync-client.js';
+import { syncPendingEvents, runtimeConfig, refreshDeviceConfig } from './src/sync-client.js';
 
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 5000;
 const SYNC_INTERVAL_MS = Number(process.env.SYNC_INTERVAL_MS) || 60000;
-const CAPTURE_TITLES = process.env.CAPTURE_WINDOW_TITLES !== 'false';
 
 let currentEvent = null;
 
@@ -26,16 +25,17 @@ async function poll() {
   }
 
   if (currentEvent.app_name !== focused.app_name) {
-   bufferEvent({
-  ...currentEvent,
-  window_title: CAPTURE_TITLES ? currentEvent.window_title : null,
-  end_time: now
-});
+    bufferEvent({
+      ...currentEvent,
+      window_title: runtimeConfig.captureTitles ? currentEvent.window_title : null,
+      end_time: now
+    });
     currentEvent = { ...focused, start_time: now };
   }
 }
 
 console.log(`Polling every ${POLL_INTERVAL_MS}ms, syncing every ${SYNC_INTERVAL_MS}ms`);
+refreshDeviceConfig();
 setInterval(poll, POLL_INTERVAL_MS);
 setInterval(syncPendingEvents, SYNC_INTERVAL_MS);
 
