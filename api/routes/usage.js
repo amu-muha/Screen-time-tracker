@@ -24,7 +24,8 @@ usageRouter.get('/', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT a.name AS app_name, a.category, t.total_seconds
+      `SELECT a.name AS app_name, a.category, t.total_seconds,
+              COALESCE(t.event_count, 1) AS session_count
        FROM ${config.table} t
        JOIN apps a ON a.id = t.app_id
        WHERE t.device_id = $1
@@ -35,6 +36,33 @@ usageRouter.get('/', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'query failed' });
+  }
+});
+
+usageRouter.get('/history', async (req, res) => {
+  const deviceId = req.query.device_id;
+  const days = parseInt(req.query.days, 10) || 7;
+
+  if (!deviceId) {
+    return res.status(400).json({ error: 'device_id is required' });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT d.usage_date::text AS usage_date,
+              COALESCE(a.category, 'Uncategorized') AS category,
+              SUM(d.total_seconds)::int AS total_seconds
+       FROM daily_usage d
+       JOIN apps a ON a.id = d.app_id
+       WHERE d.device_id = $1 AND d.usage_date >= CURRENT_DATE - ($2 || ' days')::interval
+       GROUP BY d.usage_date, a.category
+       ORDER BY d.usage_date ASC`,
+      [deviceId, days - 1]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'history query failed' });
   }
 });
 

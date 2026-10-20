@@ -71,4 +71,57 @@ eventsRouter.post('/', deviceAuth, validateEvent, async (req, res) => {
   }
 });
 
+eventsRouter.get('/active', async (req, res) => {
+  const deviceId = req.query.device_id;
+  if (!deviceId) return res.status(400).json({ error: 'device_id is required' });
+
+  try {
+    const result = await pool.query(
+      `SELECT r.id, a.name AS app_name, a.category, r.window_title,
+              r.start_time, r.end_time, r.duration_seconds,
+              (NOW() - r.end_time < INTERVAL '60 seconds') AS is_active
+       FROM raw_events r
+       JOIN apps a ON a.id = r.app_id
+       WHERE r.device_id = $1
+       ORDER BY r.end_time DESC
+       LIMIT 1`,
+      [deviceId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json(null);
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'active event query failed' });
+  }
+});
+
+eventsRouter.get('/', async (req, res) => {
+  const deviceId = req.query.device_id;
+  const date = req.query.date || null;
+  const limit = Math.min(200, parseInt(req.query.limit, 10) || 100);
+
+  if (!deviceId) return res.status(400).json({ error: 'device_id is required' });
+
+  try {
+    const result = await pool.query(
+      `SELECT r.id, a.name AS app_name, a.category, r.window_title,
+              r.start_time, r.end_time, r.duration_seconds
+       FROM raw_events r
+       JOIN apps a ON a.id = r.app_id
+       WHERE r.device_id = $1
+         AND r.start_time::date = COALESCE($2::date, CURRENT_DATE)
+       ORDER BY r.start_time ASC
+       LIMIT $3`,
+      [deviceId, date, limit]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'events query failed' });
+  }
+});
+
 export default eventsRouter;
