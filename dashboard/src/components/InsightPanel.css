@@ -1,28 +1,96 @@
-.insight-panel {
-  background: linear-gradient(135deg, #F2F0FF 0%, #FBEFF7 100%);
-  border-radius: var(--radius-md);
-  padding: 20px 22px;
-  height: 100%;
+.insights-card {
+  padding: 22px 24px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 24px;
 }
 
-.insight-panel__label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  margin-bottom: 8px;
+.insights-card__header {
+  margin-bottom: 14px;
 }
 
-.insight-panel__text {
-  margin: 0;
+.insights-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+  background: var(--primary-subtle);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.insights-card__main {
+  margin-bottom: 16px;
+}
+
+.ai-summary-text,
+.computed-summary-lead {
   font-size: 15px;
   line-height: 1.6;
   color: var(--ink);
+  margin: 0;
 }
 
-.insight-panel__pending {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
+.ai-summary-text strong,
+.computed-summary-lead strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.insights-card__empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: var(--ink-faint);
-  font-style: italic;
+  font-size: 13px;
+}
+
+.insights-empty-icon {
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+
+.insights-card__loading {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.insights-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.insight-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.insight-pill__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.insight-pill__icon {
+  color: var(--ink-soft);
+}
+
+.insight-pill__text strong {
+  color: var(--ink);
+  font-weight: 700;
 }

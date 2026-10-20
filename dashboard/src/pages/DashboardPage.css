@@ -1,0 +1,108 @@
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.dashboard-error-banner {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Primary Top Grid: Screen Time Ring + Active App (Left) and Timeline (Right) */
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.dashboard-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-right-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Secondary Bottom Grid: Semicircular App Usage Grid (Left) and 7-Day Chart (Right) */
+.dashboard-secondary-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard-secondary-main {
+  min-width: 0;
+}
+
+.dashboard-secondary-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Tab Views */
+.tab-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.analytics-view-grid {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 20px;
+}
+
+/* Responsive adjustments for 14-inch laptop and smaller displays */
+@media (max-width: 1200px) {
+  .dashboard-main-grid {
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+  }
+
+  .dashboard-secondary-grid {
+    grid-template-columns: 1fr 300px;
+    gap: 16px;
+  }
+
+  .analytics-view-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-left-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .dashboard-left-col {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,94 @@
+/* Premium Theme & Design System Tokens for Screen Time Tracker */
+
+:root {
+  /* Canvas & Surfacing */
+  --bg-gradient: radial-gradient(circle at 15% 15%, #9cb2ff 0%, #7d8ff2 45%, #6675e8 100%);
+  --bg-app: #7f91f3;
+  --bg-surface: rgba(255, 255, 255, 0.96);
+  --bg-surface-glass: rgba(255, 255, 255, 0.82);
+  --bg-panel: #ffffff;
+  --bg-subtle: #f6f8fe;
+  --bg-muted: #edf1fb;
+  --bg-hover: #f1f4fd;
+  
+  /* Borders & Shadows */
+  --border: rgba(218, 226, 245, 0.85);
+  --border-subtle: rgba(230, 236, 250, 0.6);
+  --border-active: #4f46e5;
+  --shadow-sm: 0 2px 8px rgba(18, 25, 56, 0.04);
+  --shadow-md: 0 10px 24px -6px rgba(18, 25, 56, 0.08);
+  --shadow-lg: 0 20px 40px -12px rgba(18, 25, 56, 0.12);
+  --shadow-panel: 0 16px 36px -10px rgba(18, 25, 56, 0.09);
+
+  /* Typography Colors */
+  --ink: #111827;
+  --ink-secondary: #374151;
+  --ink-soft: #64748b;
+  --ink-faint: #94a3b8;
+  --ink-white: #ffffff;
+
+  /* Primary Accent & Gradients */
+  --primary: #4338ca;
+  --primary-light: #6366f1;
+  --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --ring-gradient-start: #06b6d4;
+  --ring-gradient-middle: #3b82f6;
+  --ring-gradient-end: #8b5cf6;
+
+  /* Category Visual System */
+  --cat-development: #6366f1;
+  --cat-development-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --cat-communication: #f59e0b;
+  --cat-communication-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --cat-browsing: #ec4899;
+  --cat-browsing-gradient: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+  --cat-productivity: #10b981;
+  --cat-productivity-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --cat-entertainment: #f43f5e;
+  --cat-entertainment-gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  --cat-system: #06b6d4;
+  --cat-system-gradient: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+  --cat-other: #8b5cf6;
+  --cat-other-gradient: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+
+  /* Radii */
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 9999px;
+  
+  /* Layout Measurements */
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 76px;
+  --header-height: 70px;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-gradient: radial-gradient(circle at 10% 10%, #15192c 0%, #0d111e 60%, #070912 100%);
+  --bg-app: #090c15;
+  --bg-surface: #121727;
+  --bg-surface-glass: rgba(18, 23, 39, 0.88);
+  --bg-panel: #171d31;
+  --bg-subtle: #1c233a;
+  --bg-muted: #242c48;
+  --bg-hover: #212944;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-active: #6366f1;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 24px -6px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
+  --shadow-panel: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+
+  --ink: #f8fafc;
+  --ink-secondary: #cbd5e1;
+  --ink-soft: #94a3b8;
+  --ink-faint: #64748b;
+  --ink-white: #ffffff;
+
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+}

@@ -1,0 +1,40 @@
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--ink);
+  transition: all 0.25s ease;
+}
+
+.app-main-canvas {
+  flex: 1;
+  padding: 24px 32px 40px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.settings-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .app-main-canvas {
+    padding: 20px 20px 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .app-main-canvas {
+    height: auto;
+    padding: 16px;
+  }
+}
