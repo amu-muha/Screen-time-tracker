@@ -5,6 +5,9 @@ const eventSchema = z.object({
   window_title: z.string().nullable().optional(),
   start_time: z.string().datetime(),
   end_time: z.string().datetime()
+}).refine(data => new Date(data.end_time) > new Date(data.start_time), {
+  message: 'end_time must be after start_time',
+  path: ['end_time']
 });
 
 export function validateEvent(req, res, next) {
